@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("api")
-public class WechatApiController {
+public class WechatApiController extends BaseController{
     private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private WxOpenServiceDemo wxOpenServiceDemo;
@@ -33,7 +33,7 @@ public class WechatApiController {
     @GetMapping("auth/goto_auth_url")
     public void gotoPreAuthUrl(HttpServletRequest request, HttpServletResponse response){
         String host = request.getHeader("host");
-        String url = "http://"+host+"/api/auth/jump";
+        String url = "https://"+host+"/api/auth/jump";
         try {
             url = wxOpenServiceDemo.getWxOpenComponentService().getPreAuthUrl(url);
             response.sendRedirect(url);
@@ -48,6 +48,10 @@ public class WechatApiController {
         try {
             WxOpenQueryAuthResult queryAuthResult = wxOpenServiceDemo.getWxOpenComponentService().getQueryAuth(authorizationCode);
             logger.info("getQueryAuth", queryAuthResult);
+            // 这里要进行缓存才行的吧
+            String AppId = queryAuthResult.getAuthorizationInfo().getAuthorizerAppid();
+            String reFreshToken = queryAuthResult.getAuthorizationInfo().getAuthorizerRefreshToken();
+            wxOpenServiceDemo.getWxOpenConfigStorage().setAuthorizerRefreshToken(AppId, reFreshToken);
             return queryAuthResult;
         } catch (WxErrorException e) {
             logger.error("gotoPreAuthUrl", e);

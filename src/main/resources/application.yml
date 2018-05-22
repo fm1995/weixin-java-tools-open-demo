@@ -2,7 +2,6 @@ logging:
   level:
     org.springframework.web: DEBUG
     com.github.binarywang.demo.wechat: DEBUG
-
 wechat:
   open:
     componentAppId: "wxdf1147a020c2d975"
