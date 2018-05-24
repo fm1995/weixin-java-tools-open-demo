@@ -5,8 +5,10 @@ import com.github.binarywang.demo.wechat.utils.JsonUtils;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutNewsMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,17 @@ public class MsgHandler extends AbstractHandler {
       }
     } catch (WxErrorException e) {
       e.printStackTrace();
+    }
+
+    if (wxMessage.getContent().equals("手机绑定")) {
+      WxMpXmlOutNewsMessage.Item item = new WxMpXmlOutNewsMessage.Item();
+      item.setDescription("点击绑定手机号");
+      item.setTitle("手机号绑定");
+      item.setPicUrl("http://pic7.uuyimei.com/biz/img/201803091503029356967.jpg");
+      item.setUrl("https://shwx1.uuyimei.com/html/bindphone/?openid=" + wxMessage.getFromUser());
+      return WxMpXmlOutMessage.NEWS().addArticle(item).
+              fromUser(wxMessage.getToUser()).
+              toUser(wxMessage.getFromUser()).build();
     }
 
     //TODO 组装回复消息

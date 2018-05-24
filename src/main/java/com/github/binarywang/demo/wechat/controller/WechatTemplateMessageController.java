@@ -30,6 +30,8 @@ public class WechatTemplateMessageController extends BaseController{
         }
         return "test";
     }
+
+
     // 发送会员卡信息
     @RequestMapping("/cardTemplate")
     public String cardTemplate() {
@@ -96,6 +98,7 @@ public class WechatTemplateMessageController extends BaseController{
         }catch (WxErrorException e){
             this.logger.error(e.getMessage());
         }
+
         return "发送模板消息";
     }
 

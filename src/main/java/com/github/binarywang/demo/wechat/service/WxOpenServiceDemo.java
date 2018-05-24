@@ -70,7 +70,6 @@ public class WxOpenServiceDemo extends WxOpenServiceImpl {
         inRedisConfigStorage.setComponentAesKey(wechatOpenProperties.getComponentAesKey());
         setWxOpenConfigStorage(inRedisConfigStorage);
         wxOpenMessageRouter = new WxOpenMessageRouter(this);
-        wxOpenMessageRouter.rule().async(false).handler(this.msgHandler).end();
 
         // 记录所有事件的日志 （异步执行）
         wxOpenMessageRouter.rule().handler(this.logHandler).next();
