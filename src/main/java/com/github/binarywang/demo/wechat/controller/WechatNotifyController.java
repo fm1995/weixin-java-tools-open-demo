@@ -96,13 +96,10 @@ public class WechatNotifyController extends BaseController{
             }
         }else{
             WxMpXmlOutMessage outMessage = wxOpenService.getWxOpenMessageRouter().route(inMessage, appId);
-            System.out.println("555555555555");
-            System.out.println(outMessage);
             if(outMessage != null){
                 out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenService.getWxOpenConfigStorage());
             }
         }
-
         return out;
     }
 

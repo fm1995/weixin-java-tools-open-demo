@@ -3,6 +3,7 @@ package com.github.binarywang.demo.wechat.controller;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.membercard.WxMpMemberCardUserInfoResult;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplate;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
@@ -30,9 +31,23 @@ public class WechatTemplateMessageController extends BaseController{
         }
         return "test";
     }
+    // https://shwx1.uuyimei.com/template-message/getMemberCardInfo
+    @RequestMapping("/getMemberCardInfo")
+    public WxMpMemberCardUserInfoResult getMemberCardInfo() {
+        String AppId = "wx407ff98f415361dc";
+        WxMpService wxMpService = wxOpenService.getWxOpenComponentService().getWxMpServiceByAppid(AppId);
+        try {
+            WxMpMemberCardUserInfoResult info = wxMpService.getMemberCardService().getUserInfo("ptDARwFT9HdfSbJnaq1qP1dcIt2s","622661128303");
+            System.out.println(info);
+            return info;
+        }catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-
-    // 发送会员卡信息
+    // 发送模板信息
+    // https://shwx1.uuyimei.com/template-message/cardTemplate
     @RequestMapping("/cardTemplate")
     public String cardTemplate() {
         String AppId = "wx407ff98f415361dc";

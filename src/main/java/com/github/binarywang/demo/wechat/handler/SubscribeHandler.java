@@ -1,6 +1,7 @@
 package com.github.binarywang.demo.wechat.handler;
 
 import com.github.binarywang.demo.wechat.builder.TextBuilder;
+import com.google.gson.JsonObject;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -30,8 +31,24 @@ public class SubscribeHandler extends AbstractHandler {
 
     if (userWxInfo != null) {
       // TODO 可以添加关注用户到本地
-    }
+      String unionId = userWxInfo.getUnionId();
+      String openId = userWxInfo.getOpenId();
+      String appId = weixinService.getWxMpConfigStorage().getAppId();
+      String getStr = "&unionId="+userWxInfo.getUnionId();
+      getStr = getStr + "&openId="+userWxInfo.getOpenId();
+      getStr = getStr + "&appId="+weixinService.getWxMpConfigStorage().getAppId();
+      getStr = getStr + "&nickName="+userWxInfo.getNickname();
+      getStr = getStr + "&city="+userWxInfo.getCity();
+      getStr = getStr + "&country="+userWxInfo.getCountry();
+      getStr = getStr + "&language="+userWxInfo.getLanguage();
+      getStr = getStr + "&sex="+userWxInfo.getSex();
+      getStr = getStr + "&avatar="+userWxInfo.getHeadImgUrl();
 
+      String getUrl = getLinkByAppId(appId);
+      if (getUrl.startsWith("http")) {
+        weixinService.get(getUrl, getStr);
+      }
+    }
     WxMpXmlOutMessage responseResult = null;
     try {
       responseResult = handleSpecial(wxMessage);
@@ -51,7 +68,17 @@ public class SubscribeHandler extends AbstractHandler {
 
     return null;
   }
-
+  private String getLinkByAppId(String AppId) {
+    String Host = "";
+    switch (AppId) { // 公众号的APPID
+      case "wx407ff98f415361dc": // 医美客户管理系统
+        Host = "https://gztest2g.uuyimei.com";
+        break;
+      case "111":
+        break;
+    }
+    return Host + "/open-wechat/save-unionid";
+  }
   /**
    * 处理特殊请求，比如如果是扫码进来的，可以做相应处理
    */
