@@ -60,6 +60,8 @@ public class WxOpenServiceDemo extends WxOpenServiceImpl {
     private UnsubscribeHandler unsubscribeHandler;
     @Autowired
     private SubscribeHandler subscribeHandler;
+    @Autowired
+    private MemberCardHandler memberCardHandler;
 
     @PostConstruct
     public void init() {
@@ -73,6 +75,11 @@ public class WxOpenServiceDemo extends WxOpenServiceImpl {
 
         // 记录所有事件的日志 （异步执行）
         wxOpenMessageRouter.rule().handler(this.logHandler).next();
+
+        // 卡券接口 - 会员卡信息修改
+        wxOpenMessageRouter.rule().async(false).msgType(WxConsts.XmlMsgType.EVENT)
+                .event(WxMpEventConstants.SUBMIT_MEMBERCARD_USER_INFO)
+                .handler(this.memberCardHandler).end();
 
         // 接收客服会话管理事件
         wxOpenMessageRouter.rule().async(false).msgType(WxConsts.XmlMsgType.EVENT)
